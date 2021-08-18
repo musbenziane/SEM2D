@@ -1,8 +1,10 @@
 program SEM2D
     implicit none
     character(len=40)                :: filename, filecheck
-    integer                          :: N, nel1, nel2, nt, isrc, isnap
+    integer                          :: N, nel1, nel2, nt, isrc, isnap, i, j
     real(kind=4)                     :: h, f0, dt, z0, x0
+
+
 
 
 
@@ -53,6 +55,8 @@ program SEM2D
     print*,"Number of time steps            -> ",nt
     print*,"Source location                 -> ",isrc
     print*,"Snapshot interval               -> ",isnap
+
+
 
 end program
 
