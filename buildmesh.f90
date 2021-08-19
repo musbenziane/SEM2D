@@ -54,12 +54,9 @@ subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,mesh_gll1,mes
 
     do i=1,nel1
         do j=1,nel2
-
-
             do k=1,N+1
                 do l=1,N+1
                     call shapefunc2D(xi(k),eta(l),shape)
-
 
                     sum1 = shape(1) * mesh_z(i,j) + shape(2) * mesh_z(i,j+1) + shape(3) * mesh_z(i+1,j) &
                             + shape(4) * mesh_z(i+1,j+1)
@@ -70,7 +67,8 @@ subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,mesh_gll1,mes
                     mesh_gll2(C1(l,i),C2(k,j)) = sum2
                 end do
             end do
-
         end do
     end do
+
+
 end subroutine buildmesh

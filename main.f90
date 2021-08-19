@@ -9,7 +9,6 @@ program SEM2D
 
 
 
-
     write(*,*) "##########################################"
     write(*,*) "######## Reading parameters file #########"
     write(*,*) "##########################################"
@@ -67,9 +66,8 @@ program SEM2D
 
     call buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,mesh_gll1,mesh_gll2)
 
-    do i=1,ngll1
-        print*,mesh_gll2(i,1:10)
-    end do
+
+    deallocate(mesh_gll1,mesh_gll2,mesh_z,mesh_x)
 
 end program
 
