@@ -1,8 +1,9 @@
 program SEM2D
     implicit none
-    character(len=40)                :: filename, filecheck
-    integer                          :: N, nel1, nel2, nt, isrc, isnap, i, j
-    real(kind=4)                     :: h, f0, dt, z0, x0
+    character(len=40)                               :: filename, filecheck
+    integer                                         :: N, nel1, nel2, nt, isrc, isnap, i, j, ngll1, ngll2
+    real(kind=4)                                    :: h, f0, dt, z0, x0
+    real(kind=4), dimension(:,:), allocatable       :: mesh_x, mesh_z, mesh_gll1, mesh_gll2
 
 
 
@@ -56,7 +57,19 @@ program SEM2D
     print*,"Source location                 -> ",isrc
     print*,"Snapshot interval               -> ",isnap
 
+    x0 = 0
+    z0 = 0
+    ngll1 = N * nel1 + 1
+    ngll2 = N * nel2 + 1
 
+    allocate(mesh_z(nel1+1,nel2+1),mesh_x(nel1+1,nel2+1))
+    allocate(mesh_gll1(ngll1,ngll2),mesh_gll2(ngll1,ngll2))
+
+    call buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,mesh_gll1,mesh_gll2)
+
+    do i=1,ngll1
+        print*,mesh_gll2(i,1:10)
+    end do
 
 end program
 

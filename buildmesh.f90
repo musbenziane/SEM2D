@@ -1,19 +1,19 @@
 ! Created by mus on 17/08/2021.
 
-subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,x,z)
-    use shapefunc2D
+subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,mesh_gll1,mesh_gll2)
     implicit none
     real(kind=4), intent(in)                            :: x0, z0, h
     integer, intent(in)                                 :: N, nel1, nel2, ngll1, ngll2
     real(kind=4), dimension(nel1+1,nel2+1), intent(out) :: mesh_x, mesh_z
-    real(kind=4), dimension(ngll1), intent(out)         :: z
-    real(kind=4), dimension(ngll2), intent(out)         :: x
+    real(kind=4), dimension(ngll1,ngll2), intent(out)   :: mesh_gll1, mesh_gll2
+
 
     real(kind=4), dimension(N+1)                        :: xi, eta, wi
     real(kind=4), dimension(4)                          :: shape
     integer, dimension(N+1,nel1)                        :: C1
     integer, dimension(N+1,nel2)                        :: C2
     integer                                             :: i, j, k, l, m
+    real(kind=4)                                        :: sum1, sum2
 
 
     call gll(N,xi,wi)
@@ -21,11 +21,9 @@ subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,x,z)
     call connectivity_matrix(N,nel1,C1)
     call connectivity_matrix(N,nel2,C2)
 
-
     mesh_x(:,:) = 0
     mesh_z(:,:) = 0
-    x(:)        = 0
-    z(:)        = 0
+
 
     ! Build regular element wise mesh for the 4 anchor points on each element
 
@@ -51,23 +49,28 @@ subroutine buildmesh(x0,z0,h,N,nel1,nel2,ngll1,ngll2,mesh_z,mesh_x,x,z)
         end do
     end do
 
-    do i=1,nel1-1
-        do j=1,nel2-1
+    ! Build actual mesh (at gll points) by means of shape functions
+    mesh_gll1(:,:) = 0
+
+    do i=1,nel1
+        do j=1,nel2
+
 
             do k=1,N+1
                 do l=1,N+1
-                    shape = shapefunc2D(xi(k),eta(l))
-                    do m=1,4
-                        wi(:) = 0
-                    end do
+                    call shapefunc2D(xi(k),eta(l),shape)
 
+
+                    sum1 = shape(1) * mesh_z(i,j) + shape(2) * mesh_z(i,j+1) + shape(3) * mesh_z(i+1,j) &
+                            + shape(4) * mesh_z(i+1,j+1)
+                    sum2 = shape(1) * mesh_x(i,j) + shape(2) * mesh_x(i,j+1) + shape(3) * mesh_x(i+1,j) &
+                            + shape(4) * mesh_x(i+1,j+1)
+
+                    mesh_gll1(C1(l,i),C2(k,j)) = sum1
+                    mesh_gll2(C1(l,i),C2(k,j)) = sum2
                 end do
             end do
 
         end do
     end do
-
-
-
-
 end subroutine buildmesh
