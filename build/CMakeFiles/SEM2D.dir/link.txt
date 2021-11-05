@@ -1,0 +1,1 @@
+/usr/bin/f95 -g CMakeFiles/SEM2D.dir/main.f90.o CMakeFiles/SEM2D.dir/buildmesh.f90.o CMakeFiles/SEM2D.dir/shapefunc2D.f90.o CMakeFiles/SEM2D.dir/connectivity_matrix.f90.o CMakeFiles/SEM2D.dir/gll.f90.o -o SEM2D 
